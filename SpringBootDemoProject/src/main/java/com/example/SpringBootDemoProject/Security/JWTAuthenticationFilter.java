@@ -30,6 +30,22 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String path = request.getRequestURI();
+
+        if (path.startsWith("/swagger-ui") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-resources") ||
+                path.startsWith("/webjars") ||
+                path.equals("/swagger-ui.html") ||
+                path.startsWith("/auth")) {
+
+            log.info("⛔ Skipping JWT filter for: {}", path);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+
+
 
         //        try {
 //            Thread.sleep(500);
